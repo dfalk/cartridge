@@ -15,7 +15,7 @@ from mezzanine.utils.views import render, set_cookie
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation, Order
+from cartridge.shop.models import Product, Vendor, ProductVariation, Order
 from cartridge.shop.models import DiscountCode
 from cartridge.shop.utils import recalculate_discount, sign
 
@@ -25,6 +25,16 @@ handler = lambda s: import_dotted_path(s) if s else lambda *args: None
 billship_handler = handler(settings.SHOP_HANDLER_BILLING_SHIPPING)
 payment_handler = handler(settings.SHOP_HANDLER_PAYMENT)
 order_handler = handler(settings.SHOP_HANDLER_ORDER)
+
+
+def vendor(request, slug, template="shop/vendor.html"):
+    vendor_object = get_object_or_404(Vendor, slug=slug)
+    published_products = Product.objects.published(for_user=request.user).filter(vendor=vendor_object)
+    context = {
+        "vendor": vendor_object,
+        "product_list": published_products,
+    }
+    return render(request, template, context)
 
 
 def product(request, slug, template="shop/product.html"):

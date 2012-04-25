@@ -12,7 +12,7 @@ from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
 from cartridge.shop.forms import ProductVariationAdminFormset
 from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
-from cartridge.shop.models import Category, Product, ProductImage
+from cartridge.shop.models import Category, Product, ProductImage, Vendor
 from cartridge.shop.models import ProductVariation, ProductOption, Order
 from cartridge.shop.models import OrderItem, Sale, DiscountCode
 
@@ -36,6 +36,16 @@ class CategoryAdmin(PageAdmin):
     filter_horizontal = ("options",)  # "products", )
 
 
+vendor_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
+vendor_fieldsets[0][1]["fields"].extend(["image", "content"])
+
+
+class VendorAdmin(DisplayableAdmin):
+    fieldsets = vendor_fieldsets
+    formfield_overrides = {ImageField: {"widget": ImageWidget}}
+    list_display = ("admin_thumb", "title", "status", "admin_link")
+
+
 class ProductVariationAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
     model = ProductVariation
@@ -54,7 +64,7 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
-product_fieldsets[0][1]["fields"].extend(["categories", "content"])
+product_fieldsets[0][1]["fields"].extend(["vendor", "categories", "content"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
@@ -233,6 +243,7 @@ class DiscountCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Vendor, VendorAdmin)
 admin.site.register(ProductOption, ProductOptionAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)

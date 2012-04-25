@@ -147,6 +147,7 @@ class Product(Displayable, Priced, RichText):
     image = CharField(max_length=100, blank=True, null=True)
     categories = models.ManyToManyField("Category", blank=True,
                                         related_name="products")
+    vendor = models.ForeignKey("Vendor", blank=True, null=True)
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
     related_products = models.ManyToManyField("self", blank=True)
@@ -332,6 +333,34 @@ class ProductVariation(Priced):
         """
         live = self.live_num_in_stock()
         return live is None or quantity == 0 or live >= quantity
+
+
+class Vendor(Displayable, RichText):
+    '''
+    Product vendor
+    '''
+
+    # Image label
+    image = models.ImageField(_("Image"), upload_to='vendor_pictures/')
+
+    objects = DisplayableManager()
+
+    class Meta:
+        verbose_name = _("Vendor")
+        verbose_name_plural = _("Vendors")
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('shop_vendor', [unicode(self.slug)])
+
+    def admin_thumb(self):
+        if self.image is None:
+            return ""
+        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
+        thumb_url = thumbnail(self.image, 56, 56)
+        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
+    admin_thumb.allow_tags = True
+    admin_thumb.short_description = ""
 
 
 class Order(models.Model):
