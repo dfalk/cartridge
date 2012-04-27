@@ -148,6 +148,7 @@ class Product(Displayable, Priced, RichText):
     categories = models.ManyToManyField("Category", blank=True,
                                         related_name="products")
     vendor = models.ForeignKey("Vendor", blank=True, null=True)
+    second_hand = models.BooleanField(_("Second hand"), default=False)
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
     related_products = models.ManyToManyField("self", blank=True)
