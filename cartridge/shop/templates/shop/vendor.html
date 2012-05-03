@@ -3,9 +3,15 @@
 {% load mezzanine_tags shop_tags i18n %}
 {% block body_id %}category{% endblock %}
 
+{% block meta_title %}{{ vendor.title }}{% endblock %}
+
 {% block breadcrumb_menu %}
 {{ block.super }}
 <li>{{ vendor.title }}</li>
+{% endblock %}
+
+{% block title %}
+{% editable vendor.title %}{{ vendor.title }}{% endeditable %}
 {% endblock %}
 
 {% block main %}{{ block.super }}
