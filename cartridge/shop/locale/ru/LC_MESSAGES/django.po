@@ -218,19 +218,19 @@ msgstr "Количество подуктов отображаемых на ст
 
 #: defaults.py:239
 msgid "Recently added"
-msgstr "Недавно добавленные"
+msgstr "Новое"
 
 #: defaults.py:240
 msgid "Highest rated"
-msgstr "Высокий рейтинг"
+msgstr "По рейтингу"
 
 #: defaults.py:241
 msgid "Least expensive"
-msgstr "Наименее дорогие"
+msgstr "По цене (на возрастание)"
 
 #: defaults.py:242
 msgid "Most expensive"
-msgstr "Наиболее дорогие"
+msgstr "По цене (на убывание)"
 
 #: fields.py:45 management/commands/product_db.py:33
 msgid "SKU"
