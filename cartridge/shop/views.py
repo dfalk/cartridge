@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 
 from mezzanine.conf import settings
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.views import render, set_cookie
+from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
@@ -29,10 +29,19 @@ order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 def vendor(request, slug, template="shop/vendor.html"):
     vendor_object = get_object_or_404(Vendor, slug=slug)
-    published_products = Product.objects.published(for_user=request.user).filter(vendor=vendor_object)
+    settings.use_editable()
+    products = Product.objects.published(for_user=request.user).filter(vendor=vendor_object)
+    sort_options = [(slugify(option[0]), option[1])
+                    for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
+    sort_by = request.GET.get("sort", sort_options[0][1])
+    products = paginate(products.order_by(sort_by),
+                        request.GET.get("page", 1),
+                        settings.SHOP_PER_PAGE_CATEGORY,
+                        settings.MAX_PAGING_LINKS)
+    products.sort_by = sort_by
     context = {
         "vendor": vendor_object,
-        "product_list": published_products,
+        "products": products,
     }
     return render(request, template, context)
 
