@@ -145,6 +145,7 @@ class Product(Displayable, Priced, RichText):
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
     image = CharField(max_length=100, blank=True, null=True)
+    position = models.PositiveIntegerField(default=99)
     categories = models.ManyToManyField("Category", blank=True,
                                         related_name="products")
     vendor = models.ForeignKey("Vendor", blank=True, null=True)
@@ -158,6 +159,7 @@ class Product(Displayable, Priced, RichText):
     objects = DisplayableManager()
 
     class Meta:
+        ordering = ["position"]
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 

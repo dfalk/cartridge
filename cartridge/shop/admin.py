@@ -65,7 +65,7 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
-product_fieldsets[0][1]["fields"].extend(["vendor", "second_hand", "categories", "content"])
+product_fieldsets[0][1]["fields"].extend(["position", "vendor", "second_hand", "categories", "content"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
@@ -80,10 +80,10 @@ class ProductAdmin(DisplayableAdmin):
         js = ("cartridge/js/admin/product_variations.js",)
         css = {"all": ("cartridge/css/admin/product.css",)}
 
-    list_display = ("admin_thumb", "title", "status", "available",
+    list_display = ("admin_thumb", "title", "status", "position", "available",
                     "admin_link")
     list_display_links = ("admin_thumb", "title")
-    list_editable = ("status", "available")
+    list_editable = ("status", "position", "available")
     list_filter = ("status", "available", "categories")
     filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title",
