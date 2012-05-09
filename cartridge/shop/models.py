@@ -343,9 +343,12 @@ class Vendor(Displayable, RichText):
     # Image label
     image = models.ImageField(_("Image"), upload_to='vendor_pictures/')
 
+    position = models.PositiveIntegerField(default=99)
+
     objects = DisplayableManager()
 
     class Meta:
+        ordering = ['position']
         verbose_name = _("Vendor")
         verbose_name_plural = _("Vendors")
 

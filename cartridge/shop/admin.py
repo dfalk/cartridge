@@ -43,7 +43,8 @@ vendor_fieldsets[0][1]["fields"].extend(["image", "content"])
 class VendorAdmin(DisplayableAdmin):
     fieldsets = vendor_fieldsets
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
-    list_display = ("admin_thumb", "title", "status", "admin_link")
+    list_display = ("admin_thumb", "title", "status", "position", "admin_link")
+    list_editable = ("status", "position",)
 
 
 class ProductVariationAdmin(admin.TabularInline):
