@@ -181,7 +181,7 @@ class Product(Displayable, Priced, RichText):
         if self.image is None:
             return ""
         from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = thumbnail(self.image, 24, 24)
+        thumb_url = thumbnail(self.image, 56, 0)
         return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
     admin_thumb.allow_tags = True
     admin_thumb.short_description = ""
@@ -358,7 +358,7 @@ class Vendor(Displayable, RichText):
         if self.image is None:
             return ""
         from mezzanine.core.templatetags.mezzanine_tags import thumbnail
-        thumb_url = thumbnail(self.image, 56, 56)
+        thumb_url = thumbnail(self.image, 72, 0)
         return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
     admin_thumb.allow_tags = True
     admin_thumb.short_description = ""
