@@ -34,7 +34,7 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 {% for item in request.cart %}
 <li>
     {% if item.image %}
-    <img alt="{{ item.description }}" src="{{ MEDIA_URL }}{% thumbnail item.image 30 30 %}">
+    <img alt="{{ item.description }}" src="{{ MEDIA_URL }}{% thumbnail item.image 70 0 %}">
     {% endif %}
     {{ item.quantity }} x {{ item.description }}
     <span class="price">{{ item.total_price|currency }}</span>
