@@ -6,20 +6,11 @@ from django.utils.translation import ugettext as _
 from mezzanine.conf import register_setting
 
 
-##################################################
-#  These first set of settings already exist in  #
-#  mezzanine.conf.defaults, and are overridden   #
-#  or appended to here, with Cartridge values.   #
-##################################################
-
-# Default to False in Mezzanine, changed to True so checkout can have
-# an account option.
-register_setting(
-    name="ACCOUNTS_ENABLED",
-    description=_("If True, users can create an account."),
-    editable=False,
-    default=True,
-)
+###################################################
+#  This first set of settings already exists in   #
+#  mezzanine.conf.defaults but can be overridden  #
+#  or appended to here with Cartridge values.     #
+###################################################
 
 # Add shop admin modules to the admin menu.
 register_setting(
@@ -62,7 +53,7 @@ register_setting(
 
 
 ##########################################
-#  Remaning settings are all defined by  #
+#  Remaining settings are all defined by #
 #  Cartridge, prefixed with "SHOP_".     #
 ##########################################
 
@@ -83,7 +74,8 @@ register_setting(
 register_setting(
     name="SHOP_CHECKOUT_ACCOUNT_REQUIRED",
     label=_("Checkout account required"),
-    description=_("If True, users must create a login for the checkout process."),
+    description=_("If True, users must create a login for the checkout "
+        "process."),
     editable=True,
     default=False,
 )
@@ -114,7 +106,8 @@ register_setting(
 register_setting(
     name="SHOP_PAYMENT_STEP_ENABLED",
     label=_("Payment Enabled"),
-    description=_("If False, there is no payment step on the checkout process."),
+    description=_("If False, there is no payment step on the checkout "
+        "process."),
     editable=True,
     default=True,
 )
@@ -122,7 +115,7 @@ register_setting(
 register_setting(
     name="SHOP_CURRENCY_LOCALE",
     label=_("Currency Locale"),
-    description="Controls the formatting of monetary values accord to "
+    description="Controls the formatting of monetary values according to "
         "the locale module in the python standard library. If an empty "
         "string is used, will fall back to the system's locale.",
     editable=False,
@@ -132,7 +125,8 @@ register_setting(
 register_setting(
     name="SHOP_DEFAULT_SHIPPING_VALUE",
     label=_("Default Shipping Cost"),
-    description=_("Default cost of shipping when no custom shipping is implemented."),
+    description=_("Default cost of shipping when no custom shipping is "
+        "implemented."),
     editable=True,
     default=10.0,
 )
@@ -140,7 +134,7 @@ register_setting(
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CART",
     label=_("Discount in Cart"),
-    description=_("Can discount codes be entered on the cart page."),
+    description=_("Discount codes can be entered on the cart page."),
     editable=True,
     default=True,
 )
@@ -148,7 +142,7 @@ register_setting(
 register_setting(
     name="SHOP_DISCOUNT_FIELD_IN_CHECKOUT",
     label=_("Discount in Checkout"),
-    description=_("Can discount codes be entered on the first checkout step."),
+    description=_("Discount codes can be entered on the first checkout step."),
     editable=True,
     default=True,
 )
@@ -156,9 +150,9 @@ register_setting(
 register_setting(
     name="SHOP_HANDLER_BILLING_SHIPPING",
     label=_("Billing & Shipping Handler"),
-    description="Dotted package path and class name of the function that "
-        "is called on submit of the billing/shipping checkout step. This "
-        "is where shipping calculation can be performed and set using the "
+    description="Dotted package path and class name of the function "
+        "called upon submission of the billing/shipping checkout step. This "
+        "is where shipping calculations can be performed and set using the "
         "function ``cartridge.shop.utils.set_shipping``.",
     editable=False,
     default="cartridge.shop.checkout.default_billship_handler",
@@ -179,16 +173,16 @@ register_setting(
     name="SHOP_HANDLER_PAYMENT",
     label=_("Payment Handler"),
     description="Dotted package path and class name of the function that "
-        "is called on submit of the payment checkout step. This is where "
-        "integration with a payment gateway should be implemented.",
+        "is called upon submission of the payment checkout step. This is "
+        "where integration with a payment gateway should be implemented.",
     editable=False,
     default="cartridge.shop.checkout.default_payment_handler",
 )
 
 register_setting(
     name="SHOP_OPTION_TYPE_CHOICES",
-    description="Sequence of value/name pairs for types of product options, "
-        "eg Size, Colour.",
+    description="Sequence of value/name pairs for types of product options "
+        "(e.g. Size, Colour).",
     editable=False,
     default=(
         (1, _("Size")),
@@ -207,7 +201,8 @@ register_setting(
 register_setting(
     name="SHOP_ORDER_FROM_EMAIL",
     label=_("From Email"),
-    description=_("Email address that order receipts should be emailed from."),
+    description=_("Email address from which order receipts should be "
+        "emailed."),
     editable=True,
     default="do_not_reply@%s" % gethostname(),
 )
