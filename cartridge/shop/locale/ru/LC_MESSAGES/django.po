@@ -411,7 +411,7 @@ msgstr "Производители"
 
 #: models.py:382 models.py:392
 msgid "First name"
-msgstr "Имя"
+msgstr "Имя и отчество"
 
 #: models.py:383 models.py:393
 msgid "Last name"
