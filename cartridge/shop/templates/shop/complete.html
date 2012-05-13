@@ -73,12 +73,13 @@ _gaq.push(['_trackTrans']);
 
 {% block main %}
 <p>{% trans "Thank you for shopping with us, your order is complete." %}</p>
+<p>{% trans "Order ID:" %} {{ order.invoice_id }}</p>
 <p>{% trans "We've sent you a receipt via email." %}</p>
 <p>{% trans "You can also view your invoice using one of the links below." %}</p>
 <br>
 <p>
-    <a class="btn btn-large btn-primary" href="{% url shop_invoice order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
-    <a class="btn btn-large" target="_blank" href="{% url shop_invoice order.id %}">{% trans "View invoice in your browser" %}</a>
+    <a class="btn btn-large btn-primary" href="{% url shop_invoice order.invoice_id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
+    <a class="btn btn-large" target="_blank" href="{% url shop_invoice order.invoice_id %}">{% trans "View invoice in your browser" %}</a>
 </p>
 {% endblock %}
 

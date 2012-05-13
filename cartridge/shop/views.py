@@ -303,13 +303,13 @@ def complete(request, template="shop/complete.html"):
     return render(request, template, context)
 
 
-def invoice(request, order_id, template="shop/order_invoice.html"):
+def invoice(request, invoice_id, template="shop/order_invoice.html"):
     """
     Display a plain text invoice for the given order. The order must
     belong to the user which is checked via session or ID if
     authenticated, or if the current user is staff.
     """
-    lookup = {"id": order_id}
+    lookup = {"invoice_id": invoice_id}
     if not request.user.is_authenticated():
         lookup["key"] = request.session.session_key
     elif not request.user.is_staff:
@@ -320,7 +320,7 @@ def invoice(request, order_id, template="shop/order_invoice.html"):
     context = RequestContext(request, context)
     if request.GET.get("format") == "pdf":
         response = HttpResponse(mimetype="application/pdf")
-        name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.id))
+        name = slugify("%s-invoice-%s" % (settings.SITE_TITLE, order.invoice_id))
         response["Content-Disposition"] = "attachment; filename=%s.pdf" % name
         html = get_template(template).render(context)
         import ho.pisa

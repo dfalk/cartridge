@@ -2,7 +2,8 @@
 
 <table width="100%" border="0">
     <tr>
-        <td>{% trans "Order ID:" %} {{ order.id }}</td>
+        <td>{% trans "Order ID:" %} {{ order.invoice_id }}</td>
+        <td>{% trans "Status" %}: {{ order.get_status_display }}</td>
         <td align="right">{{ order.time }}</td>
     </tr>
 </table>

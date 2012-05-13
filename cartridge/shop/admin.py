@@ -183,11 +183,12 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     ordering = ("status", "-id")
-    list_display = ("id", "billing_name", "total", "time", "status",
-                    "transaction_id", "invoice")
+    list_display = ("id", "invoice_id", "billing_name", "total", "time",
+                    "status", "transaction_id", "invoice")
     list_editable = ("status",)
     list_filter = ("status", "time")
-    list_display_links = ("id", "billing_name",)
+    list_display_links = ("id", "invoice_id",)
+    readonly_fields = ("invoice_id",)
     search_fields = (["id", "status", "transaction_id"] +
                      billing_fields + shipping_fields)
     date_hierarchy = "time"
@@ -197,8 +198,9 @@ class OrderAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Billing details"), {"fields": (tuple(billing_fields),)}),
         (_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
-        (None, {"fields": ("additional_instructions", ("shipping_total",
-            "shipping_type"), ("discount_total", "discount_code"),
+        (None, {"fields": ("invoice_id", "additional_instructions",
+            ("shipping_total", "shipping_type"),
+            ("discount_total", "discount_code"),
             "item_total", ("total", "status"), "transaction_id")}),
     )
 
