@@ -403,7 +403,7 @@ msgstr "Кол-во"
 
 #: models.py:268
 msgid "Default"
-msgstr "По-умолч."
+msgstr "По умолчанию"
 
 #: models.py:365
 msgid "Vendors"

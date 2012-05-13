@@ -19,7 +19,11 @@ def category_processor(request, page):
     sort_options = [(slugify(option[0]), option[1])
                     for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
     sort_by = request.GET.get("sort", sort_options[0][1])
-    products = paginate(products.order_by(sort_by),
+    if sort_by == "position":
+        products_list = products.order_by(sort_by, "-date_added")
+    else:
+        products_list = products.order_by(sort_by)
+    products = paginate(products_list,
                         request.GET.get("page", 1),
                         settings.SHOP_PER_PAGE_CATEGORY,
                         settings.MAX_PAGING_LINKS)
