@@ -13,17 +13,9 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.PositiveIntegerField')(default=99),
                       keep_default=False)
 
-        # Adding field 'Product.second_hand'
-        db.add_column('shop_product', 'second_hand',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
     def backwards(self, orm):
         # Deleting field 'Product.position'
         db.delete_column('shop_product', 'position')
-
-        # Deleting field 'Product.second_hand'
-        db.delete_column('shop_product', 'second_hand')
 
     models = {
         'contenttypes.contenttype': {
