@@ -16,6 +16,7 @@ from mezzanine.pages.models import Page
 from mezzanine.utils.timezone import now
 
 from cartridge.shop import fields, managers
+import invoice_generator
 
 try:
     from _mysql_exceptions import OperationalError
@@ -344,6 +345,8 @@ class ProductVariation(Priced):
 
 class Order(models.Model):
 
+    invoice_id = models.CharField(_("Invoice ID"), max_length=6, null=True,
+                                  blank=True, unique=True)
     billing_detail_first_name = CharField(_("First name"), max_length=100)
     billing_detail_last_name = CharField(_("Last name"), max_length=100)
     billing_detail_street = CharField(_("Street"), max_length=100)
@@ -374,7 +377,6 @@ class Order(models.Model):
     total = fields.MoneyField(_("Order total"))
     transaction_id = CharField(_("Transaction ID"), max_length=255, null=True,
                                blank=True)
-
     status = models.IntegerField(_("Status"),
                             choices=settings.SHOP_ORDER_STATUS_CHOICES,
                             default=settings.SHOP_ORDER_STATUS_CHOICES[0][0])
@@ -463,11 +465,19 @@ class Order(models.Model):
         Returns the HTML for a link to the PDF invoice for use in the
         order listing view of the admin.
         """
-        url = reverse("shop_invoice", args=(self.id,))
+        url = reverse("shop_invoice", args=(self.invoice_id,))
         text = ugettext("Download PDF invoice")
         return "<a href='%s?format=pdf'>%s</a>" % (url, text)
     invoice.allow_tags = True
     invoice.short_description = ""
+
+    def save(self, *args, **kwargs):
+        super(Order, self).save(*args, **kwargs)
+
+        # Populate the invoice_id if it is missing
+        if self.id and not self.invoice_id:
+            self.invoice_id = invoice_generator.encode(self.id)
+            super(Order, self).save(*args, **kwargs)
 
 
 class Cart(models.Model):
