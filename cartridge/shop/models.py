@@ -381,7 +381,8 @@ class Order(models.Model):
 
     billing_detail_first_name = CharField(_("First name"), max_length=100)
     billing_detail_last_name = CharField(_("Last name"), max_length=100)
-    billing_detail_street = CharField(_("Street"), max_length=100)
+    billing_detail_street = CharField(_("Street"), max_length=100,
+              help_text=_("Street, building, room"))
     billing_detail_city = CharField(_("City/Suburb"), max_length=100)
     billing_detail_state = CharField(_("State/Region"), max_length=100)
     billing_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
