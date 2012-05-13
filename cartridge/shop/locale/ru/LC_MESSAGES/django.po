@@ -742,7 +742,7 @@ msgstr "Кол-во"
 
 #: templates/shop/cart.html:25 templates/shop/includes/order_details.html:40
 msgid "Price"
-msgstr "Цена"
+msgstr "Стоимость"
 
 #: templates/shop/cart.html:26
 msgid "Remove?"
