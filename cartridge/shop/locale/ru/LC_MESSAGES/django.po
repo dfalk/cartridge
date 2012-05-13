@@ -303,7 +303,7 @@ msgstr "Категории товаров"
 
 #: models.py:103 models.py:593
 msgid "Unit price"
-msgstr "Цена за штуку"
+msgstr "Цена за шт."
 
 #: models.py:105
 msgid "Sale price"
@@ -372,11 +372,11 @@ msgstr "Параметры товара"
 
 #: models.py:256
 msgid "Number in stock"
-msgstr "Количество в магазине"
+msgstr "Кол-во"
 
 #: models.py:258
 msgid "Default"
-msgstr "По-умолчанию"
+msgstr "По-умолч."
 
 #: models.py:350
 msgid "Vendor"

@@ -50,8 +50,8 @@ class VendorAdmin(DisplayableAdmin):
 class ProductVariationAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
     model = ProductVariation
-    fields = ("sku", "default", "num_in_stock", "unit_price", "sale_price",
-              "sale_from", "sale_to", "image")
+    fields = ("sku", "default", "num_in_stock", "image", "unit_price", "sale_price",
+              "sale_from", "sale_to")
     extra = 0
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = ProductVariationAdminForm
