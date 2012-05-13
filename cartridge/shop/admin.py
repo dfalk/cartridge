@@ -84,7 +84,7 @@ class ProductAdmin(DisplayableAdmin):
                     "admin_link")
     list_display_links = ("admin_thumb", "title")
     list_editable = ("status", "position", "available")
-    list_filter = ("status", "available", "categories")
+    list_filter = ("status", "available", "categories", "vendor")
     filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title",
                      "variations__sku")

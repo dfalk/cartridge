@@ -148,7 +148,7 @@ class Product(Displayable, Priced, RichText):
     position = models.PositiveIntegerField(default=99)
     categories = models.ManyToManyField("Category", blank=True,
                                         related_name="products")
-    vendor = models.ForeignKey("Vendor", blank=True, null=True)
+    vendor = models.ForeignKey("Vendor", verbose_name=_("Vendor"), blank=True, null=True)
     second_hand = models.BooleanField(_("Second hand"), default=False)
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
