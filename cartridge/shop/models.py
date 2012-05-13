@@ -18,6 +18,10 @@ from mezzanine.utils.timezone import now
 from cartridge.shop import fields, managers
 import invoice_generator
 
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
+
+
 try:
     from _mysql_exceptions import OperationalError
 except ImportError:
@@ -782,6 +786,11 @@ class Sale(Discount):
                   "sale_from": None, "sale_to": None}
         for priced_model in (Product, ProductVariation):
             priced_model.objects.filter(sale_id=self.id).update(**update)
+
+
+@receiver(pre_delete, sender=Sale)
+def _sale_delete(sender, instance, **kwargs):
+    instance._clear()
 
 
 class DiscountCode(Discount):
