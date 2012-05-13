@@ -7,7 +7,7 @@
 {% trans "Your order has been successful, details are below." %}
 
 {% trans "Order ID:" %} {{ order.invoice_id }}
-{% trans "Check status link:" %}{% url shop_invoice order.invoice_id %}
+{% trans "Check status link:" %}http://{{ request.get_host }}{% url shop_invoice order.invoice_id %}
 
 {% trans "Billing Details:" %}
 {% for field, value in order_billing_detail_fields %}
