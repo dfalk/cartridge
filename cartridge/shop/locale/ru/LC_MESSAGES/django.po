@@ -762,7 +762,7 @@ msgstr "Ваша корзина пуста."
 
 #: templates/shop/checkout.html:4 templates/shop/checkout.html.py:5
 msgid "Checkout"
-msgstr "Заказать"
+msgstr "Оформление заказа"
 
 #: templates/shop/checkout.html:5
 msgid "Step"
@@ -821,11 +821,11 @@ msgstr "Благодарим за пользование нашими услаг
 
 #: templates/shop/complete.html:76
 msgid "We've sent you a receipt via email."
-msgstr "Мы выслали вам подтверждение на ваш электронный адрес."
+msgstr "Мы выслали подтверждение на ваш электронный адрес."
 
 #: templates/shop/complete.html:77
 msgid "You can also view your invoice using one of the links below."
-msgstr "Вы также можете просмотреть распечатку заказ по одной из ссылок ниже"
+msgstr "Вы также можете просмотреть распечатку заказа по одной из ссылок ниже"
 
 #: templates/shop/complete.html:81
 msgid "View invoice in your browser"
