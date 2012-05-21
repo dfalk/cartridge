@@ -50,9 +50,10 @@ class VendorAdmin(DisplayableAdmin):
 class ProductVariationAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
     model = ProductVariation
-    fields = ("sku", "default", "num_in_stock", "image", "unit_price", "sale_price",
+    fields = ("sku", "default", "num_in_stock", "unit_price", "image", "sale_price",
               "sale_from", "sale_to")
-    extra = 0
+    extra = 1
+    max_num = 1
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = ProductVariationAdminForm
     formset = ProductVariationAdminFormset
@@ -65,7 +66,7 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
-product_fieldsets[0][1]["fields"].extend(["position", "vendor", "second_hand", "categories", "content"])
+product_fieldsets[0][1]["fields"].extend(["position", "vendor", "categories", "content"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
