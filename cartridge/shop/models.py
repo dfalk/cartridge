@@ -265,7 +265,8 @@ class ProductVariation(Priced):
     ``SHOP_OPTION_TYPE_CHOICES`` for a ``Product`` instance.
     """
 
-    product = models.ForeignKey("Product", related_name="variations")
+    product = models.ForeignKey("Product", related_name="variations",
+                                verbose_name=_("Product"))
     sku = fields.SKUField(unique=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
@@ -278,7 +279,9 @@ class ProductVariation(Priced):
     __metaclass__ = ProductVariationMetaclass
 
     class Meta:
-        ordering = ("-default",)
+        ordering = ("product", "-default",)
+        verbose_name = _("Product variation")
+        verbose_name_plural = _("Product variations")
 
     def __unicode__(self):
         """
@@ -290,6 +293,15 @@ class ProductVariation(Priced):
                 options.append("%s: %s" % (unicode(field.verbose_name),
                                            getattr(self, field.name)))
         return ("%s %s" % (unicode(self.product), ", ".join(options))).strip()
+
+    def admin_thumb(self):
+        if self.image is None:
+            return ""
+        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
+        thumb_url = thumbnail(self.image, 56, 0)
+        return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
+    admin_thumb.allow_tags = True
+    admin_thumb.short_description = ""
 
     def save(self, *args, **kwargs):
         """

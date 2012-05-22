@@ -405,6 +405,14 @@ msgstr "Кол-во"
 msgid "Default"
 msgstr "По умолчанию"
 
+#: models.py:282
+msgid "Product variation"
+msgstr "Вариация товара"
+
+#: models.py:283
+msgid "Product variations"
+msgstr "Вариации товаров"
+
 #: models.py:365
 msgid "Vendors"
 msgstr "Производители"
