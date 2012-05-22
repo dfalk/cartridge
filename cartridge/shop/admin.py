@@ -165,6 +165,12 @@ class ProductAdmin(DisplayableAdmin):
             self._product.variations.set_default_images(deleted_images)
 
 
+class ProductVariationAdmin(admin.ModelAdmin):
+    list_display = ("admin_thumb", "__unicode__", "sku", "num_in_stock", "unit_price")
+    list_editable = ("num_in_stock", "unit_price")
+    list_display_links = ("admin_thumb", "__unicode__",)
+
+
 class ProductOptionAdmin(admin.ModelAdmin):
     ordering = ("type", "name")
     list_display = ("type", "name")
@@ -247,6 +253,7 @@ class DiscountCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductVariation, ProductVariationAdmin)
 admin.site.register(Vendor, VendorAdmin)
 admin.site.register(ProductOption, ProductOptionAdmin)
 admin.site.register(Order, OrderAdmin)

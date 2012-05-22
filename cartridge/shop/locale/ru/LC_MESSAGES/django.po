@@ -357,6 +357,10 @@ msgstr "Б/у"
 msgid "Date added"
 msgstr "Дата добавления"
 
+#: models.py:160
+msgid "Position"
+msgstr "Позиция"
+
 #: models.py:162
 msgid "Related products"
 msgstr "Связанные товары"
@@ -404,6 +408,14 @@ msgstr "Кол-во"
 #: models.py:268
 msgid "Default"
 msgstr "По умолчанию"
+
+#: models.py:282
+msgid "Product variation"
+msgstr "Вариация товара"
+
+#: models.py:283
+msgid "Product variations"
+msgstr "Вариации товаров"
 
 #: models.py:365
 msgid "Vendors"
