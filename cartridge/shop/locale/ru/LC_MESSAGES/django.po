@@ -357,6 +357,10 @@ msgstr "Б/у"
 msgid "Date added"
 msgstr "Дата добавления"
 
+#: models.py:160
+msgid "Position"
+msgstr "Позиция"
+
 #: models.py:162
 msgid "Related products"
 msgstr "Связанные товары"
