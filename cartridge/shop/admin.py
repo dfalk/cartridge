@@ -47,7 +47,7 @@ class VendorAdmin(DisplayableAdmin):
     list_editable = ("status", "position",)
 
 
-class ProductVariationAdmin(admin.TabularInline):
+class ProductVariationInlineAdmin(admin.TabularInline):
     verbose_name_plural = _("Current variations")
     model = ProductVariation
     fields = ("sku", "default", "num_in_stock", "unit_price", "image", "sale_price",
@@ -59,7 +59,7 @@ class ProductVariationAdmin(admin.TabularInline):
     formset = ProductVariationAdminFormset
 
 
-class ProductImageAdmin(TabularDynamicInlineAdmin):
+class ProductImageInlineAdmin(TabularDynamicInlineAdmin):
     model = ProductImage
     formfield_overrides = {ImageField: {"widget": ImageWidget}}
 
@@ -89,7 +89,7 @@ class ProductAdmin(DisplayableAdmin):
     filter_horizontal = ("categories", "related_products", "upsell_products")
     search_fields = ("title", "content", "categories__title",
                      "variations__sku")
-    inlines = (ProductImageAdmin, ProductVariationAdmin)
+    inlines = (ProductImageInlineAdmin, ProductVariationInlineAdmin)
     form = ProductAdminForm
     fieldsets = product_fieldsets
 
@@ -163,6 +163,8 @@ class ProductAdmin(DisplayableAdmin):
             # Run again to allow for no images existing previously, with
             # new images added which can be used as defaults for variations.
             self._product.variations.set_default_images(deleted_images)
+
+        self._product.set_image()
 
 
 class ProductVariationAdmin(admin.ModelAdmin):
