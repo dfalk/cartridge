@@ -34,6 +34,10 @@ def vendor(request, slug, template="shop/vendor.html"):
     vendor_object = get_object_or_404(Vendor, slug=slug)
     settings.use_editable()
     products = Product.objects.published(for_user=request.user).filter(vendor=vendor_object)
+    vendors = Vendor.objects.published(for_user=request.user)
+    vendor_filter = request.GET.get("vendor", "")
+    if vendor_filter:
+        products = products.filter(vendor__slug=vendor_filter)
     sort_options = [(slugify(option[0]), option[1])
                     for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
     sort_by = request.GET.get("sort", sort_options[0][1])
@@ -46,8 +50,10 @@ def vendor(request, slug, template="shop/vendor.html"):
                         settings.SHOP_PER_PAGE_CATEGORY,
                         settings.MAX_PAGING_LINKS)
     products.sort_by = sort_by
+    products.vendor_filter = vendor_filter
     context = {
         "vendor": vendor_object,
+        "vendors": vendors,
         "products": products,
     }
     return render(request, template, context)

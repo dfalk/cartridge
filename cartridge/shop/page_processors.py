@@ -5,7 +5,7 @@ from mezzanine.conf import settings
 from mezzanine.pages.page_processors import processor_for
 from mezzanine.utils.views import paginate
 
-from cartridge.shop.models import Category, Product
+from cartridge.shop.models import Category, Product, Vendor
 
 
 @processor_for(Category)
@@ -16,6 +16,10 @@ def category_processor(request, page):
     settings.use_editable()
     products = Product.objects.published(for_user=request.user
                                 ).filter(page.category.filters()).distinct()
+    vendors = Vendor.objects.published(for_user=request.user)
+    vendor_filter = request.GET.get("vendor", "")
+    if vendor_filter:
+        products = products.filter(vendor__slug=vendor_filter)
     sort_options = [(slugify(option[0]), option[1])
                     for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
     sort_by = request.GET.get("sort", sort_options[0][1])
@@ -28,4 +32,5 @@ def category_processor(request, page):
                         settings.SHOP_PER_PAGE_CATEGORY,
                         settings.MAX_PAGING_LINKS)
     products.sort_by = sort_by
-    return {"products": products}
+    products.vendor_filter = vendor_filter
+    return {"products": products, "vendors": vendors}
