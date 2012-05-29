@@ -168,6 +168,11 @@ class Product(Displayable, Priced, RichText):
                              verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
 
+    # Stock fields
+    sku = fields.SKUField(unique=True, blank=True, null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
+                                       null=True)
+
     objects = DisplayableManager()
 
     class Meta:
@@ -198,6 +203,34 @@ class Product(Displayable, Priced, RichText):
         if self.images.all():
             self.image = self.images.all()[0].file.name
             self.save()
+
+    def live_num_in_stock(self):
+        """
+        Returns the live number in stock, which is
+        ``self.num_in_stock - num in carts``. Also caches the value
+        for subsequent lookups.
+        """
+        if self.num_in_stock is None:
+            return None
+        if not hasattr(self, "_cached_num_in_stock"):
+            num_in_stock = self.num_in_stock
+            items = CartItem.objects.filter(sku=self.sku)
+            aggregate = items.aggregate(quantity_sum=models.Sum("quantity"))
+            num_in_carts = aggregate["quantity_sum"]
+            if num_in_carts is not None:
+                num_in_stock = num_in_stock - num_in_carts
+            self._cached_num_in_stock = num_in_stock
+        return self._cached_num_in_stock
+
+    def has_stock(self, quantity=1):
+        """
+        Returns ``True`` if the given quantity is in stock, by checking
+        against ``live_num_in_stock``. ``True`` is returned when
+        ``num_in_stock`` is ``None`` which is how stock control is
+        disabled.
+        """
+        live = self.live_num_in_stock()
+        return live is None or quantity == 0 or live >= quantity
 
     def admin_thumb(self):
         if self.image is None:
@@ -275,7 +308,7 @@ class ProductVariation(Priced):
 
     product = models.ForeignKey("Product", related_name="variations",
                                 verbose_name=_("Product"))
-    sku = fields.SKUField(unique=True, blank=True, null=True)
+    sku = fields.SKUField(unique=True)
     num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
                                        null=True)
     default = models.BooleanField(_("Default"), default=True)

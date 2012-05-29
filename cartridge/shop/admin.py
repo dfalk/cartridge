@@ -66,7 +66,9 @@ class ProductImageInlineAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"][1] = ("status", "available")
-product_fieldsets[0][1]["fields"].extend(["position", "vendor", "categories", "content"])
+product_fieldsets[0][1]["fields"].extend(["unit_price", "num_in_stock",
+              "sale_price", "sale_from", "sale_to",
+              "position", "vendor", "categories", "content"])
 product_fieldsets = list(product_fieldsets)
 product_fieldsets.append((_("Other products"), {
     "classes": ("collapse-closed",),
@@ -81,15 +83,15 @@ class ProductAdmin(DisplayableAdmin):
         js = ("cartridge/js/admin/product_variations.js",)
         css = {"all": ("cartridge/css/admin/product.css",)}
 
-    list_display = ("admin_thumb", "title", "status", "position", "available",
-                    "admin_link")
+    list_display = ("admin_thumb", "title", "status", "unit_price",
+                    "num_in_stock", "available",
+                    "position", "admin_link")
     list_display_links = ("admin_thumb", "title")
-    list_editable = ("status", "position", "available")
+    list_editable = ("status", "position", "unit_price", "num_in_stock", "available")
     list_filter = ("status", "available", "categories", "vendor")
     filter_horizontal = ("categories", "related_products", "upsell_products")
-    search_fields = ("title", "content", "categories__title",
-                     "variations__sku")
-    inlines = (ProductImageInlineAdmin, ProductVariationInlineAdmin)
+    search_fields = ("title", "content", "categories__title")
+    inlines = (ProductImageInlineAdmin,)
     form = ProductAdminForm
     fieldsets = product_fieldsets
 
@@ -163,6 +165,10 @@ class ProductAdmin(DisplayableAdmin):
             # Run again to allow for no images existing previously, with
             # new images added which can be used as defaults for variations.
             self._product.variations.set_default_images(deleted_images)
+
+        # Save the images formset stored previously.
+        super(ProductAdmin, self).save_formset(request, form,
+                                                 self._images_formset, change)
 
         self._product.set_image()
 
