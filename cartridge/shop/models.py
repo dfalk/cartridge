@@ -410,7 +410,8 @@ class Vendor(Displayable, RichText):
     '''
 
     # Image label
-    image = models.ImageField(_("Image"), upload_to='vendor_pictures/')
+    image = models.ImageField(_("Image"), upload_to='vendor_pictures/',
+                              blank=True, null=True)
 
     position = models.PositiveIntegerField(default=99)
 
