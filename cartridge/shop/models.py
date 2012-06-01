@@ -159,7 +159,7 @@ class Product(Displayable, Priced, RichText):
                                         verbose_name=_("Product categories"),
                                         blank=True, related_name="products")
     position = models.PositiveIntegerField(_("Position"), default=99)
-    vendor = models.ForeignKey("Vendor", verbose_name=_("Vendor"), blank=True, null=True)
+    vendor = models.ForeignKey("Vendor", verbose_name=_("Vendor"), blank=True, null=True, related_name="vendor_products")
     second_hand = models.BooleanField(_("Second hand"), default=False)
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
