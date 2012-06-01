@@ -419,7 +419,7 @@ class Vendor(Displayable, RichText):
     objects = DisplayableManager()
 
     class Meta:
-        ordering = ['position']
+        ordering = ['position', 'title']
         verbose_name = _("Vendor")
         verbose_name_plural = _("Vendors")
 
