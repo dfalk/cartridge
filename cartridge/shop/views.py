@@ -31,9 +31,14 @@ order_handler = handler(settings.SHOP_HANDLER_ORDER)
 
 
 def vendor(request, slug, template="shop/vendor.html"):
-    vendor_object = get_object_or_404(Vendor, slug=slug)
+    try:
+        vendor_object = Vendor.objects.get(slug=slug)
+    except:
+        vendor_object = None
     settings.use_editable()
-    products = Product.objects.published(for_user=request.user).filter(vendor=vendor_object)
+    products = Product.objects.published(for_user=request.user)
+    if vendor_object:
+        products = products.filter(vendor=vendor_object)
     sort_options = [(slugify(option[0]), option[1])
                     for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
     sort_by = request.GET.get("sort", sort_options[0][1])
