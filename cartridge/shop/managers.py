@@ -20,15 +20,21 @@ class CartManager(Manager):
         n = now()
         expiry_minutes = timedelta(minutes=settings.SHOP_CART_EXPIRY_MINUTES)
         expiry_time = n - expiry_minutes
-        try:
-            cart_id = request.session.get("cart", None)
-            cart = self.get(last_updated__gte=expiry_time, id=cart_id)
-        except self.model.DoesNotExist:
-            self.filter(last_updated__lt=expiry_time).delete()
-            cart = self.create(last_updated=n)
-            request.session["cart"] = cart.id
-        else:
-            cart.save()  # Update timestamp.
+        cart_id = request.session.get("cart", None)
+        cart = None
+        if cart_id:
+            try:
+                cart = self.get(last_updated__gte=expiry_time, id=cart_id)
+            except self.model.DoesNotExist:
+                request.session["cart"] = None
+            else:
+                # Update timestamp and clear out old carts.
+                cart.last_updated = n
+                cart.save()
+                self.filter(last_updated__lt=expiry_time).delete()
+        if not cart:
+            from cartridge.shop.utils import EmptyCart
+            cart = EmptyCart(request)
         return cart
 
 
@@ -174,7 +180,8 @@ class DiscountCodeManager(Manager):
         n = now()
         valid_from = Q(valid_from__isnull=True) | Q(valid_from__lte=n)
         valid_to = Q(valid_to__isnull=True) | Q(valid_to__gte=n)
-        return self.filter(valid_from, valid_to, active=True)
+        valid = self.filter(valid_from, valid_to, active=True)
+        return valid.exclude(uses_remaining=0)
 
     def get_valid(self, code, cart):
         """
