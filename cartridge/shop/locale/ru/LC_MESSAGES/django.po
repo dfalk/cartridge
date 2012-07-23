@@ -339,7 +339,7 @@ msgstr "Производитель"
 
 #: models.py:107
 msgid "Second hand"
-msgstr ""
+msgstr "Б/у"
 
 #: models.py:108
 msgid "Date added"
