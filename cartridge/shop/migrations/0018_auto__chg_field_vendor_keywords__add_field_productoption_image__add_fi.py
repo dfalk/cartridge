@@ -8,14 +8,37 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Product.sku'
-        db.add_column('shop_product', 'sku',
-                      self.gf('cartridge.shop.fields.SKUField')(max_length=20, unique=True, null=True, blank=True),
+
+        # Adding field 'ProductOption.image'
+        db.add_column('shop_productoption', 'image',
+                      self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True),
                       keep_default=False)
 
     def backwards(self, orm):
-        # Deleting field 'Product.sku'
-        db.delete_column('shop_product', 'sku')
+
+        # Changing field 'Vendor.keywords'
+        db.alter_column('shop_vendor', 'keywords', self.gf('mezzanine.generic.fields.KeywordsField')(object_id_field='object_pk', to=orm['generic.AssignedKeyword']))
+        # Deleting field 'ProductOption.image'
+        db.delete_column('shop_productoption', 'image')
+
+        # Deleting field 'Order.invoice_id'
+        db.delete_column('shop_order', 'invoice_id')
+
+        # Deleting field 'Product.position'
+        db.delete_column('shop_product', 'position')
+
+        # Deleting field 'Product.vendor'
+        db.delete_column('shop_product', 'vendor_id')
+
+        # Deleting field 'Product.second_hand'
+        db.delete_column('shop_product', 'second_hand')
+
+
+        # Changing field 'Product.rating'
+        db.alter_column('shop_product', 'rating', self.gf('mezzanine.generic.fields.RatingField')(object_id_field='object_pk', to=orm['generic.Rating']))
+
+        # Changing field 'Product.keywords'
+        db.alter_column('shop_product', 'keywords', self.gf('mezzanine.generic.fields.KeywordsField')(object_id_field='object_pk', to=orm['generic.AssignedKeyword']))
 
     models = {
         'contenttypes.contenttype': {
@@ -49,15 +72,15 @@ class Migration(SchemaMigration):
         },
         'pages.page': {
             'Meta': {'ordering': "('titles',)", 'object_name': 'Page'},
+            '_meta_title': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             '_order': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'content_model': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'in_footer': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'in_navigation': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'keywords': ('mezzanine.generic.fields.KeywordsField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.AssignedKeyword']"}),
+            'in_menus': ('mezzanine.pages.fields.MenusField', [], {'default': '[1, 2, 3]', 'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'keywords': ('mezzanine.generic.fields.KeywordsField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.AssignedKeyword']", 'frozen_by_south': 'True'}),
             'keywords_string': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'login_required': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': "orm['pages.Page']"}),
@@ -129,6 +152,7 @@ class Migration(SchemaMigration):
             'discount_code': ('cartridge.shop.fields.DiscountCodeField', [], {'max_length': '20', 'blank': 'True'}),
             'discount_total': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'invoice_id': ('django.db.models.fields.CharField', [], {'max_length': '6', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'item_total': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'shipping_detail_city': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
@@ -158,7 +182,8 @@ class Migration(SchemaMigration):
             'unit_price': ('cartridge.shop.fields.MoneyField', [], {'default': "'0'", 'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'})
         },
         'shop.product': {
-            'Meta': {'object_name': 'Product'},
+            'Meta': {'ordering': "['position']", 'object_name': 'Product'},
+            '_meta_title': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'available': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'categories': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['shop.Category']", 'symmetrical': 'False', 'blank': 'True'}),
             'content': ('mezzanine.core.fields.RichTextField', [], {}),
@@ -168,11 +193,12 @@ class Migration(SchemaMigration):
             'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'keywords': ('mezzanine.generic.fields.KeywordsField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.AssignedKeyword']"}),
+            'keywords': ('mezzanine.generic.fields.KeywordsField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.AssignedKeyword']", 'frozen_by_south': 'True'}),
             'keywords_string': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'num_in_stock': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'position': ('django.db.models.fields.PositiveIntegerField', [], {'default': '99'}),
             'publish_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'rating': ('mezzanine.generic.fields.RatingField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.Rating']"}),
+            'rating': ('mezzanine.generic.fields.RatingField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.Rating']", 'frozen_by_south': 'True'}),
             'rating_average': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'rating_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'related_products': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'related_products_rel_+'", 'blank': 'True', 'to': "orm['shop.Product']"}),
@@ -180,6 +206,7 @@ class Migration(SchemaMigration):
             'sale_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'sale_price': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
             'sale_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'second_hand': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'short_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
             'sku': ('cartridge.shop.fields.SKUField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
@@ -187,7 +214,8 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'unit_price': ('cartridge.shop.fields.MoneyField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
-            'upsell_products': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'upsell_products_rel_+'", 'blank': 'True', 'to': "orm['shop.Product']"})
+            'upsell_products': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'upsell_products_rel_+'", 'blank': 'True', 'to': "orm['shop.Product']"}),
+            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['shop.Vendor']", 'null': 'True', 'blank': 'True'})
         },
         'shop.productaction': {
             'Meta': {'unique_together': "(('product', 'timestamp'),)", 'object_name': 'ProductAction'},
@@ -208,11 +236,12 @@ class Migration(SchemaMigration):
         'shop.productoption': {
             'Meta': {'object_name': 'ProductOption'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'name': ('cartridge.shop.fields.OptionField', [], {'max_length': '50', 'null': 'True'}),
             'type': ('django.db.models.fields.IntegerField', [], {})
         },
         'shop.productvariation': {
-            'Meta': {'ordering': "('-default',)", 'object_name': 'ProductVariation'},
+            'Meta': {'ordering': "('product', '-default')", 'object_name': 'ProductVariation'},
             'default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['shop.ProductImage']", 'null': 'True', 'blank': 'True'}),
@@ -239,6 +268,25 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'valid_from': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'valid_to': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+        },
+        'shop.vendor': {
+            'Meta': {'ordering': "['position']", 'object_name': 'Vendor'},
+            '_meta_title': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'content': ('mezzanine.core.fields.RichTextField', [], {}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
+            'keywords': ('mezzanine.generic.fields.KeywordsField', [], {'object_id_field': "'object_pk'", 'to': "orm['generic.AssignedKeyword']", 'frozen_by_south': 'True'}),
+            'keywords_string': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'position': ('django.db.models.fields.PositiveIntegerField', [], {'default': '99'}),
+            'publish_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'short_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
+            'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'sites.site': {
             'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},

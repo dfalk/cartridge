@@ -184,6 +184,8 @@ class ProductOption(models.Model):
     type = models.IntegerField(_("Type"),
                                choices=settings.SHOP_OPTION_TYPE_CHOICES)
     name = fields.OptionField(_("Name"))
+    image = models.ImageField(_("Image"), upload_to="colors",
+                                        null=True, blank=True)
 
     objects = managers.ProductOptionManager()
 
