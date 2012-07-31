@@ -45,5 +45,4 @@ def category_processor(request, page):
             except:
                 pass
         product.save()
-        print product.colors
     return {"products": products}
