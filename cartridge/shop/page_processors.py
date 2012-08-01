@@ -34,11 +34,12 @@ def category_processor(request, page):
     for opt in product_options:
         dict_options[opt.name] = opt.image
     for product in products.object_list:
-        product.colors = []
-        for variation in product.variations.all():
-            try:
-                if variation.option1:
-                    product.colors.append(dict_options[variation.option1])
-            except:
-                pass
+        if product.variations.all().count() > 1:
+            product.colors = []
+            for variation in product.variations.all():
+                try:
+                    if variation.option1:
+                        product.colors.append(dict_options[variation.option1])
+                except:
+                    pass
     return {"products": products}
