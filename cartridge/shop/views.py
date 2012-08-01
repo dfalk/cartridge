@@ -19,7 +19,8 @@ from mezzanine.utils.views import render, set_cookie, paginate
 
 from cartridge.shop import checkout
 from cartridge.shop.forms import AddProductForm, DiscountForm, CartItemFormSet
-from cartridge.shop.models import Product, ProductVariation, Vendor
+from cartridge.shop.models import Product, ProductVariation
+from cartridge.shop.models import ProductOption, Vendor
 from cartridge.shop.models import Order, OrderItem, DiscountCode
 from cartridge.shop.utils import recalculate_discount, sign
 
@@ -47,6 +48,21 @@ def vendor(request, slug, template="shop/vendor.html"):
                         settings.SHOP_PER_PAGE_CATEGORY,
                         settings.MAX_PAGING_LINKS)
     products.sort_by = sort_by
+    # inject product colors:
+    product_options = ProductOption.objects.all()
+    dict_options = {}
+    for opt in product_options:
+        dict_options[opt.name] = opt.image
+    for product in products.object_list:
+        if product.variations.all().count() > 1:
+            product.colors = []
+            for variation in product.variations.all():
+                try:
+                    if variation.option1:
+                        product.colors.append(dict_options[variation.option1])
+                except:
+                    pass
+
     context = {
         "vendor": vendor_object,
         "products": products,
