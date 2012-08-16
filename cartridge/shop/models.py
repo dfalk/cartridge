@@ -538,6 +538,16 @@ class Order(models.Model):
                 uses_remaining=F('uses_remaining') - 1)
         request.cart.delete()
 
+    def cancel(self):
+        for item in OrderItem.objects.filter(order=self):
+            try:
+                variation = ProductVariation.objects.get(sku=item.sku)
+            except ProductVariation.DoesNotExist:
+                pass
+            else:
+                variation.update_stock(item.quantity * 1)
+                variation.save()
+
     def details_as_dict(self):
         """
         Returns the billing_detail_* and shipping_detail_* fields
@@ -565,7 +575,9 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         super(Order, self).save(*args, **kwargs)
-
+        if self.status == 2:
+            print "cancel"
+            self.cancel()
         # Populate the invoice_id if it is missing
         if self.id and not self.invoice_id:
             self.invoice_id = invoice_generator.encode(self.id)
