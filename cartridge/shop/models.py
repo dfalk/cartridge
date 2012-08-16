@@ -576,7 +576,6 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         super(Order, self).save(*args, **kwargs)
         if self.status == 2:
-            print "cancel"
             self.cancel()
         # Populate the invoice_id if it is missing
         if self.id and not self.invoice_id:
