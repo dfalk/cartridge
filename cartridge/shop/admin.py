@@ -244,6 +244,14 @@ class ProductVariationAdmin(admin.ModelAdmin):
     list_editable = ("num_in_stock", "unit_price")
     list_display_links = ("admin_thumb", "__unicode__",)
 
+    def save_model(self, request, obj, form, change):
+        """
+        Copy data from the default variation to original product fields.
+        """
+        super(ProductVariationAdmin, self).save_model(request, obj, form, change)
+        self._productvariation = obj
+        if self._productvariation.default:
+            self._productvariation.product.copy_default_variation()
 
 class ProductOptionAdmin(admin.ModelAdmin):
     ordering = ("type", "name")
