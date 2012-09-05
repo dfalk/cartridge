@@ -149,6 +149,16 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
             self.image = default.image.file.name
         self.save()
 
+    def _get_stock_info(self):
+        stock_price = 0
+        stock_count = 0
+        for item in self.variations.all():
+            if item.num_in_stock > 0:
+                stock_price += item.stock_price
+                stock_count += item.num_in_stock
+        return {'stock_price': stock_price, 'stock_count': stock_count}
+    stock_info = property(_get_stock_info)
+
 
 class ProductImage(Orderable):
     """
@@ -324,6 +334,14 @@ class ProductVariation(Priced):
                 self.product.num_in_stock = self.num_in_stock
                 self.product.save()
 
+    def _get_stock_price(self):
+        if self.num_in_stock:
+            result = self.num_in_stock * self.price()
+            return result
+        else:
+            return None
+    stock_price = property(_get_stock_price)
+
 
 class Category(Page, RichText):
     """
@@ -429,6 +447,17 @@ class Vendor(Displayable, RichText):
         return "<img src='%s%s' />" % (settings.MEDIA_URL, thumb_url)
     admin_thumb.allow_tags = True
     admin_thumb.short_description = ""
+
+    def _get_stock_info(self):
+        stock_price = 0
+        stock_count = 0
+        for item in self.product_set.all():
+            stock_info = item.stock_info
+            if stock_info['stock_count'] > 0:
+                stock_count += stock_info['stock_count']
+                stock_price += stock_info['stock_price']
+        return {'stock_price': stock_price, 'stock_count': stock_count}
+    stock_info = property(_get_stock_info)
 
 
 class Order(models.Model):
