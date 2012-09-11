@@ -84,6 +84,8 @@ def product(request, slug, template="shop/product.html"):
     """
     published_products = Product.objects.published(for_user=request.user)
     product = get_object_or_404(published_products, slug=slug)
+    _product_stock = ProductVariation.objects.filter(product=product).aggregate(Sum('num_in_stock'))
+    product.stock = _product_stock['num_in_stock__sum']
     to_cart = (request.method == "POST" and
                request.POST.get("add_wishlist") is None)
     default_variation = product.variations.get(default=True)
