@@ -112,13 +112,15 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     upsell_products = models.ManyToManyField("self",
                              verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
+    available_in_stock = models.BooleanField(_("Available in stock"),
+                                    default=True, editable=False)
 
     objects = DisplayableManager()
 
     admin_thumb_field = "image"
 
     class Meta:
-        ordering = ["position"]
+        ordering = ["available_in_stock", "position"]
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
@@ -268,6 +270,13 @@ class ProductVariation(Priced):
         created.
         """
         super(ProductVariation, self).save(*args, **kwargs)
+        if self.num_in_stock == 0:
+            if self.product.stock_info['stock_count'] == 0:
+                 self.product.available_in_stock = False
+                 self.product.save()
+        else:
+             self.product.available_in_stock = True
+             self.product.save()
         if not self.sku:
             self.sku = self.id
             self.save()
