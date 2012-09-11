@@ -120,7 +120,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     admin_thumb_field = "image"
 
     class Meta:
-        ordering = ["available_in_stock", "position"]
+        ordering = ["-available_in_stock", "position"]
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
