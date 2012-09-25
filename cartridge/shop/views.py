@@ -51,7 +51,8 @@ def vendor(request, slug, template="shop/vendor.html"):
     products.sort_by = sort_by
     # get stocked products
     product_stock = {}
-    _product_stock = ProductVariation.objects.filter(product__in=products.object_list).order_by('product__id').values('product').annotate(Sum('num_in_stock'))
+    prod_ids = [x.id for x in products.object_list]
+    _product_stock = ProductVariation.objects.filter(product__id__in=prod_ids).order_by('product__id').values('product').annotate(Sum('num_in_stock'))
     for row in _product_stock:
         product_stock[row['product']] = row['num_in_stock__sum']
     # inject product colors nad stock:
