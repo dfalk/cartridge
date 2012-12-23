@@ -70,7 +70,7 @@ def vendor(request, slug, template="shop/vendor.html"):
             product.colors = []
             for variation in product.variations.all():
                 try:
-                    if variation.option1:
+                    if (variation.option1) and (variation.num_in_stock > 0):
                         product.colors.append(dict_options[variation.option1])
                 except:
                     pass
