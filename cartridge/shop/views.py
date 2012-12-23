@@ -25,6 +25,10 @@ from cartridge.shop.models import ProductOption, Vendor
 from cartridge.shop.models import Order, OrderItem, DiscountCode
 from cartridge.shop.utils import recalculate_discount, sign
 
+from django.utils import simplejson
+from django.core import serializers
+from tacbagshop.models import Shipping, Payment
+
 
 # Set up checkout handlers.
 handler = lambda s: import_dotted_path(s) if s else lambda *args: None
@@ -311,12 +315,19 @@ def checkout_steps(request):
                 step += 1
                 form = form_class(request, step, initial=initial)
 
+    shipping_types = Shipping.objects.filter(is_active=True)
+    shipping_json = serializers.serialize("json", shipping_types)
+
+    payment_types = Payment.objects.filter(is_active=True)
+    payment_json = serializers.serialize("json", payment_types)
+
     step_vars = checkout.CHECKOUT_STEPS[step - 1]
     template = "shop/%s.html" % step_vars["template"]
     CHECKOUT_STEP_FIRST = step == checkout.CHECKOUT_STEP_FIRST
     context = {"form": form, "CHECKOUT_STEP_FIRST": CHECKOUT_STEP_FIRST,
                "step_title": step_vars["title"], "step_url": step_vars["url"],
-               "steps": checkout.CHECKOUT_STEPS, "step": step}
+               "steps": checkout.CHECKOUT_STEPS, "step": step,
+               "shipping_json": shipping_json, "payment_json": payment_json}
     return render(request, template, context)
 
 
