@@ -130,6 +130,7 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         ``SHOP_USE_VARIATIONS`` is False, and the product is
         updated via the admin change list.
         """
+        if not self.content: self.content = " "
         updating = self.id is not None
         super(Product, self).save(*args, **kwargs)
         if updating and not settings.SHOP_USE_VARIATIONS:
