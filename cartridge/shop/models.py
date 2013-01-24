@@ -500,6 +500,7 @@ class Order(models.Model):
     user_id = models.IntegerField(blank=True, null=True)
     shipping_type = CharField(_("Shipping type"), max_length=50, blank=True)
     shipping_total = fields.MoneyField(_("Shipping total"))
+    billing_type = CharField(_("Billing type"), max_length=50, blank=True)
     item_total = fields.MoneyField(_("Item total"))
     discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
     discount_total = fields.MoneyField(_("Discount total"))
@@ -514,7 +515,7 @@ class Order(models.Model):
 
     # These are fields that are stored in the session. They're copied to
     # the order in setup() and removed from the session in complete().
-    session_fields = ("shipping_type", "shipping_total", "discount_total")
+    session_fields = ("billing_type", "shipping_type", "shipping_total", "discount_total")
 
     class Meta:
         verbose_name = _("Order")

@@ -288,7 +288,7 @@ class OrderAdmin(admin.ModelAdmin):
         (_("Billing details"), {"fields": (tuple(billing_fields),)}),
         (_("Shipping details"), {"fields": (tuple(shipping_fields),)}),
         (None, {"fields": ("invoice_id", "additional_instructions",
-            ("shipping_total", "shipping_type"),
+            ("billing_type", "shipping_total", "shipping_type"),
             ("discount_total", "discount_code"),
             "item_total", ("total", "status"), "transaction_id")}),
     )

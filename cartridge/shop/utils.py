@@ -82,6 +82,13 @@ def set_shipping(request, shipping_type, shipping_total):
     request.session["shipping_total"] = shipping_total
 
 
+def set_billing(request, billing_type):
+    """
+    Stores the billing type in the session.
+    """
+    request.session["billing_type"] = billing_type
+
+
 def sign(value):
     """
     Returns the hash of the given value, used for signing order key stored in
