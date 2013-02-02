@@ -114,6 +114,10 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     rating = RatingField(verbose_name=_("Rating"))
     available_in_stock = models.BooleanField(_("Available in stock"),
                                     default=True, editable=False)
+    length = models.FloatField(verbose_name=_("Length"), blank=True, null=True)
+    width = models.FloatField(verbose_name=_("Width"), blank=True, null=True)
+    height = models.FloatField(verbose_name=_("Height"), blank=True, null=True)
+    weight = models.FloatField(verbose_name=_("Weight"), blank=True, null=True)
 
     objects = DisplayableManager()
 
